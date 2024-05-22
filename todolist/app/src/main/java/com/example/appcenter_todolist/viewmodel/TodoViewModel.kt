@@ -94,6 +94,7 @@ class TodoViewModel(private val todoRepository: TodoRepository): ViewModel() {
                 val response = todoRepository.getTodoById(memberId = memberId, todoId = todoId)
                 if (response.isSuccessful){
                     val gottenTodo = response.body() ?: throw Exception("받아온 Todo 정보가 비어있습니다.")
+                    _todoState.update { TodoState.Success(gottenTodo.response) }
                     fetchTodoList()
                 } else {
                     throw Exception(response.errorBody()?.string())
@@ -145,46 +146,49 @@ class TodoViewModel(private val todoRepository: TodoRepository): ViewModel() {
     ){
         viewModelScope.launch {
             try {
-                val response = todoRepository.updateTodoById(memberId = memberId, todoId = todoId, up)
+                val response = todoRepository.updateTodoById(memberId = memberId, todoId = todoId, updateTodoReq = updateTodoReq)
                 if (response.isSuccessful){
-                    val newTodo = response.body() ?: throw Exception("추가한 Todo의 정보가 비어있습니다.")
-                    Log.d("addTodo 성공", "새로운 Todo ID: ${newTodo.response}")
+                    val newTodo = response.body() ?: throw Exception("수정한 Todo의 정보가 비어있습니다.")
+                    Log.d("updateTodo 성공", "수정한 Todo ID: ${newTodo.response}")
                     fetchTodoList()
                 } else {
                     throw Exception(response.errorBody()?.string())
                 }
             } catch (e: ApiException) {
-                Log.e("투두 추가 실패 원인", e.errorResponse.message)
+                Log.e("투두 수정 실패 원인", e.errorResponse.message)
                 _todoListState.update { TodoListState.Error(e.errorResponse.message) }
             } catch (e: Exception) {
-                Log.e("투두 추가 실패 원인", e.message.toString())
+                Log.e("투두 수정 실패 원인", e.message.toString())
                 _todoListState.update { TodoListState.Error(e.message.toString()) }
             } catch (e: RuntimeException){
-                Log.e("투두 추가 시간초과", e.message.toString())
+                Log.e("투두 수정 시간초과", e.message.toString())
                 _todoListState.update { TodoListState.Error(e.message.toString()) }
             }
         }
     }
 
-    fun completeTodoById(addTodoReq: AddTodoReq){
+    fun completeTodoById(
+        memberId: Long,
+        todoId: Long
+    ){
         viewModelScope.launch {
             try {
-                val response = todoRepository.completeTodoById(addTodoReq = addTodoReq)
+                val response = todoRepository.completeTodoById(memberId = memberId, todoId = todoId)
                 if (response.isSuccessful){
-                    val newTodo = response.body() ?: throw Exception("추가한 Todo의 정보가 비어있습니다.")
-                    Log.d("addTodo 성공", "새로운 Todo ID: ${newTodo.response}")
+                    val newTodo = response.body() ?: throw Exception("삭제한 Todo의 정보가 비어있습니다.")
+                    Log.d("deleteTodo 성공", "삭제한 Todo ID: ${newTodo.response}")
                     fetchTodoList()
                 } else {
                     throw Exception(response.errorBody()?.string())
                 }
             } catch (e: ApiException) {
-                Log.e("투두 추가 실패 원인", e.errorResponse.message)
+                Log.e("투두 삭제 실패 원인", e.errorResponse.message)
                 _todoListState.update { TodoListState.Error(e.errorResponse.message) }
             } catch (e: Exception) {
-                Log.e("투두 추가 실패 원인", e.message.toString())
+                Log.e("투두 삭제 실패 원인", e.message.toString())
                 _todoListState.update { TodoListState.Error(e.message.toString()) }
             } catch (e: RuntimeException){
-                Log.e("투두 추가 시간초과", e.message.toString())
+                Log.e("투두 삭제 시간초과", e.message.toString())
                 _todoListState.update { TodoListState.Error(e.message.toString()) }
             }
         }

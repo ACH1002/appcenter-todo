@@ -1,4 +1,4 @@
-package com.example.appcenter_todolist.model
+package com.example.appcenter_todolist.model.member
 
 import com.google.gson.annotations.SerializedName
 //회원 가입 요청 DTO

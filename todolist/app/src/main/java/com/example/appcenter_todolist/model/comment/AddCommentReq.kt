@@ -1,4 +1,4 @@
-package com.example.appcenter_todolist.model
+package com.example.appcenter_todolist.model.comment
 
 import com.google.gson.annotations.SerializedName
 

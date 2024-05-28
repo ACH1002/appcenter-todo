@@ -1,5 +1,6 @@
 package com.example.appcenter_todolist.network
 
+import android.util.Log
 import com.example.appcenter_todolist.model.ErrorResponse
 import com.google.gson.Gson
 import okhttp3.Interceptor
@@ -13,10 +14,16 @@ class ErrorResponseInterceptor : Interceptor {
         val response = chain.proceed(request)
 
         if (!response.isSuccessful) {
-            val errorBody = response.body?.string()
-            if (errorBody != null) {
+            val errorBody = response.peekBody(Long.MAX_VALUE).string()
+            if (errorBody.isNotEmpty()) {
                 val errorResponse = Gson().fromJson(errorBody, ErrorResponse::class.java)
-                throw ApiException(errorResponse)
+                if (errorResponse != null) {
+                    throw ApiException(errorResponse)
+                } else {
+                    throw IOException("Unknown error occurred")
+                }
+            } else {
+                throw IOException("Unknown error occurred")
             }
         }
         return response

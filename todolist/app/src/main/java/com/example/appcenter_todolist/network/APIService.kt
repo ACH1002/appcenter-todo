@@ -8,12 +8,13 @@ import com.example.appcenter_todolist.model.member.SignupMemberReq
 import com.example.appcenter_todolist.model.todo.TodoResponse
 import com.example.appcenter_todolist.model.comment.UpdateCommentReq
 import com.example.appcenter_todolist.model.member.LoginMemberReq
+import com.example.appcenter_todolist.model.member.MemberResponse
+import com.example.appcenter_todolist.model.member.UpdateMemberReq
 import com.example.appcenter_todolist.model.todo.UpdateTodoReq
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.DELETE
 import retrofit2.http.GET
-import retrofit2.http.Headers
 import retrofit2.http.PATCH
 import retrofit2.http.POST
 import retrofit2.http.Path
@@ -24,39 +25,44 @@ interface APIService {
     @POST("/members")
     suspend fun signUp(
         @Body signupMemberReq: SignupMemberReq
-    ): Response<CommonResponse<Long>>
+    ): Response<CommonResponse<Void>>
+
+    @GET("/members")
+    suspend fun getMemberInfo(): Response<CommonResponse<MemberResponse>>
+
+    @DELETE("/members")
+    suspend fun deleteMember(): Response<CommonResponse<Void>>
+
+    @PATCH("/members")
+    suspend fun updateMember(
+        @Body updateMemberReq: UpdateMemberReq
+    ): Response<CommonResponse<MemberResponse>>
 
     @POST("/members/login")
-    @Headers("Content-Type: application/json")
     suspend fun login(
         @Body loginMemberReq: LoginMemberReq
     ): Response<CommonResponse<Void>>
 
     //전체 투두 조회
     @GET("/todos")
-    suspend fun getTodos(
-        @Query("memberId") memberId : Long
+    suspend fun getMyTodos(): Response<CommonResponse<List<TodoResponse>>>
+
+    @GET("/todos/by-nickname")
+    suspend fun getTodosByNickname(
+        @Query("nickname") nickname : String
     ): Response<CommonResponse<List<TodoResponse>>>
 
     //투두 추가
     @POST("/todos")
     suspend fun addTodo(
-        @Query("memberId") memberId : Long,
         @Body addTodoReq: AddTodoReq
     ): Response<CommonResponse<TodoResponse>>
-
-//    //단일 투두 조회
-//    @GET("/todos/{memberId}")
-//    suspend fun getTodoById(
-//        @Path("memberId") memberId: Long,
-//        @Query("todoId") todoId: Long
-//    ): Response<CommonResponse<TodoResponse>>
 
     //단일 투두 삭제
     @DELETE("/todos/{todoId}")
     suspend fun deleteTodoById(
         @Path("todoId") todoId: Long,
-    ): Response<CommonResponse<Long>>
+    ): Response<CommonResponse<Void>>
 
     //단일 투두 수정
     @PATCH("/todos/{todoId}")
@@ -91,7 +97,7 @@ interface APIService {
     @DELETE("/comments/{commentId}")
     suspend fun deleteCommentByTodo(
         @Path("commentId") commentId: Long,
-    ): Response<CommonResponse<CommentResponse>>
+    ): Response<CommonResponse<Void>>
 
     //단일 댓글 수정
     @PATCH("/comments/{commentId}")

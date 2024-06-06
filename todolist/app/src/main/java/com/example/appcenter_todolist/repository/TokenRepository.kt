@@ -9,9 +9,4 @@ interface TokenRepository {
 
     suspend fun clearToken()
 
-    suspend fun getMember() : Long?
-
-    suspend fun saveMemberId(memberId: Long)
-
-    suspend fun clearMemberId()
 }

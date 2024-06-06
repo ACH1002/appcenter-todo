@@ -13,6 +13,8 @@ data class TodoResponse (
     val deadLine : LocalDate,
     @SerializedName("completed")
     val completed : Boolean,
+    @SerializedName("memberId")
+    val memberId : Long,
     @SerializedName("createdTime")
     val createdTime : LocalDateTime,
     @SerializedName("modifiedTime")

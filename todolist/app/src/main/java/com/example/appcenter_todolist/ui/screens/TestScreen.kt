@@ -4,6 +4,7 @@ import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -36,6 +37,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -49,10 +51,14 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import com.example.appcenter_todolist.model.member.LoginMemberReq
+import com.example.appcenter_todolist.model.member.SignupMemberReq
 import com.example.appcenter_todolist.model.todo.AddTodoReq
+import com.example.appcenter_todolist.viewmodel.CommentViewModel
 import com.example.appcenter_todolist.viewmodel.MemberViewModel
 import com.example.appcenter_todolist.viewmodel.TodoListState
+import com.example.appcenter_todolist.viewmodel.TodoState
 import com.example.appcenter_todolist.viewmodel.TodoViewModel
+import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
 import java.time.LocalDate
 
@@ -61,9 +67,25 @@ import java.time.LocalDate
 @Composable
 fun TestScreen(
     todoViewModel: TodoViewModel = koinViewModel(),
-    memberViewModel: MemberViewModel = koinViewModel()
+    memberViewModel: MemberViewModel = koinViewModel(),
+    commentViewModel: CommentViewModel = koinViewModel()
 ) {
     val todoListState by todoViewModel.todoListState.collectAsState()
+    val selectedTodoState by todoViewModel.selectedTodoState.collectAsState()
+
+
+    var signupEmail by rememberSaveable(stateSaver = TextFieldValue.Saver) {
+        mutableStateOf(TextFieldValue())
+    }
+
+    var signupPassword by rememberSaveable(stateSaver = TextFieldValue.Saver) {
+        mutableStateOf(TextFieldValue())
+    }
+
+    var signupNickname by rememberSaveable(stateSaver = TextFieldValue.Saver) {
+        mutableStateOf(TextFieldValue())
+    }
+
     var loginEmail by rememberSaveable(stateSaver = TextFieldValue.Saver) {
         mutableStateOf(TextFieldValue())
     }
@@ -76,7 +98,22 @@ fun TestScreen(
         mutableStateOf(TextFieldValue())
     }
 
-    var showPassword by remember { mutableStateOf(value = false) }
+    var loginShowPassword by remember { mutableStateOf(value = false) }
+
+    var signupShowPassword by remember { mutableStateOf(value = false) }
+
+    val (testCommentDialog, setTestCommentDialog) = remember {
+        mutableStateOf(false)
+    }
+    val coroutineScope = rememberCoroutineScope()
+
+    if (testCommentDialog) {
+        TestCommentDialog(
+            selectedTodoResponse = (selectedTodoState as TodoState.Success).todo,
+            commentViewModel = commentViewModel,
+            onDismiss = { setTestCommentDialog(false) })
+    }
+
     Column(
         modifier = Modifier
             .padding(10.dp)
@@ -84,6 +121,128 @@ fun TestScreen(
         verticalArrangement = Arrangement.spacedBy(10.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+        ) {
+            TextField(
+                value = signupNickname,
+                onValueChange = { signupNickname = it },
+                modifier = Modifier
+                    .height(50.dp)
+                    .fillMaxWidth()
+                    .border(width = 1.dp, color = Color.Black, shape = RoundedCornerShape(20.dp)),
+                maxLines = 1,
+                singleLine = true,
+                colors = TextFieldDefaults.textFieldColors(
+                    containerColor = Color.Transparent,
+                    focusedIndicatorColor = Color.Transparent,
+                    unfocusedIndicatorColor = Color.Transparent,
+                    disabledIndicatorColor = Color.Transparent,
+                ),
+                textStyle = TextStyle(
+                    color = Color.Black,
+                    fontFamily = FontFamily.SansSerif
+                ),
+                label = { Text(text = "nickname") }
+            )
+            TextField(
+                value = signupEmail,
+                onValueChange = { signupEmail = it },
+                modifier = Modifier
+                    .height(50.dp)
+                    .fillMaxWidth()
+                    .border(width = 1.dp, color = Color.Black, shape = RoundedCornerShape(20.dp)),
+                maxLines = 1,
+                singleLine = true,
+                colors = TextFieldDefaults.textFieldColors(
+                    containerColor = Color.Transparent,
+                    focusedIndicatorColor = Color.Transparent,
+                    unfocusedIndicatorColor = Color.Transparent,
+                    disabledIndicatorColor = Color.Transparent,
+                ),
+                textStyle = TextStyle(
+                    color = Color.Black,
+                    fontFamily = FontFamily.SansSerif
+                ),
+                label = { Text(text = "email") }
+
+            )
+            TextField(
+                value = signupPassword,
+                onValueChange = { signupPassword = it },
+                modifier = Modifier
+                    .height(50.dp)
+                    .fillMaxWidth()
+                    .border(width = 1.dp, color = Color.Black, shape = RoundedCornerShape(20.dp)),
+                maxLines = 1,
+                singleLine = true,
+                colors = TextFieldDefaults.textFieldColors(
+                    containerColor = Color.Transparent,
+                    focusedIndicatorColor = Color.Transparent,
+                    unfocusedIndicatorColor = Color.Transparent,
+                    disabledIndicatorColor = Color.Transparent,
+                ),
+                textStyle = TextStyle(
+                    color = Color.Black,
+                    fontFamily = FontFamily.SansSerif
+                ),
+                visualTransformation = if (signupShowPassword) {
+                    VisualTransformation.None
+                } else {
+                    PasswordVisualTransformation()
+                },
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
+                trailingIcon = {
+                    if (signupShowPassword) {
+                        IconButton(onClick = { signupShowPassword = false }) {
+                            Icon(
+                                imageVector = Icons.Filled.Visibility,
+                                contentDescription = "hide_password"
+                            )
+                        }
+                    } else {
+                        IconButton(
+                            onClick = { signupShowPassword = true }) {
+                            Icon(
+                                imageVector = Icons.Filled.VisibilityOff,
+                                contentDescription = "hide_password"
+                            )
+                        }
+                    }
+                },
+                label = { Text(text = "password") }
+            )
+            Button(
+                onClick = {
+                    memberViewModel.signup(
+                        signupMemberReq = SignupMemberReq(
+                            email = signupEmail.text,
+                            nickname = signupNickname.text,
+                            password = signupPassword.text
+                        )
+                    )
+                    signupEmail = TextFieldValue("")
+                    signupNickname = TextFieldValue("")
+                    signupPassword = TextFieldValue("")
+                },
+                shape = RoundedCornerShape(10.dp),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = Color.Transparent
+                ),
+                border = BorderStroke(width = 1.dp, color = Color.Black),
+                modifier = Modifier
+                    .padding(vertical = 5.dp)
+                    .height(50.dp)
+                    .fillMaxWidth()
+            ) {
+                Text(
+                    text = "회원가입",
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = Color.Black
+                )
+            }
+        }
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -108,6 +267,7 @@ fun TestScreen(
                     color = Color.Black,
                     fontFamily = FontFamily.SansSerif
                 ),
+                label = { Text(text = "email") }
 
             )
             TextField(
@@ -129,15 +289,15 @@ fun TestScreen(
                     color = Color.Black,
                     fontFamily = FontFamily.SansSerif
                 ),
-                visualTransformation = if (showPassword) {
+                visualTransformation = if (loginShowPassword) {
                     VisualTransformation.None
                 } else {
                     PasswordVisualTransformation()
                 },
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
                 trailingIcon = {
-                    if (showPassword) {
-                        IconButton(onClick = { showPassword = false }) {
+                    if (loginShowPassword) {
+                        IconButton(onClick = { loginShowPassword = false }) {
                             Icon(
                                 imageVector = Icons.Filled.Visibility,
                                 contentDescription = "hide_password"
@@ -145,18 +305,24 @@ fun TestScreen(
                         }
                     } else {
                         IconButton(
-                            onClick = { showPassword = true }) {
+                            onClick = { loginShowPassword = true }) {
                             Icon(
                                 imageVector = Icons.Filled.VisibilityOff,
                                 contentDescription = "hide_password"
                             )
                         }
                     }
-                }
+                },
+                label = { Text(text = "password") }
             )
             Button(
                 onClick = {
-                    memberViewModel.login(loginMemberReq = LoginMemberReq(email = loginEmail.text, password = loginPassword.text))
+                    memberViewModel.login(
+                        loginMemberReq = LoginMemberReq(
+                            email = loginEmail.text,
+                            password = loginPassword.text
+                        )
+                    )
                     loginEmail = TextFieldValue("")
                     loginPassword = TextFieldValue("")
                 },
@@ -205,7 +371,7 @@ fun TestScreen(
                     fontFamily = FontFamily.SansSerif
                 ),
 
-            )
+                )
             Button(
                 onClick = {
                     todoViewModel.addTodo(
@@ -298,7 +464,17 @@ fun TestScreen(
                                         uncheckedColor = Color.Red
                                     )
                                 )
-                                Text(text = todo.content)
+                                Text(
+                                    text = todo.content,
+                                    modifier = Modifier
+                                        .clickable {
+                                            coroutineScope.launch {
+                                                todoViewModel.setSelectedTodoState(todo = todo)
+                                                setTestCommentDialog(true)
+
+                                            }
+                                        }
+                                )
                             }
                             Button(
                                 onClick = {

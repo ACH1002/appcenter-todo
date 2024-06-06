@@ -16,7 +16,7 @@ interface CommentRepository {
 
     suspend fun deleteCommentByTodo(
         commentId: Long
-    ): Response<CommonResponse<CommentResponse>>
+    ): Response<CommonResponse<Void>>
 
     suspend fun updateCommentByTodo(
         commentId: Long,

@@ -15,18 +15,4 @@ class TokenRepositoryImpl(private val dataStoreManager: DataStoreManager) : Toke
     override suspend fun clearToken() {
         dataStoreManager.clearToken()
     }
-
-    override suspend fun getMember(): Long? {
-        val memberIdString = dataStoreManager.memberId.first()
-        return if (memberIdString.isNullOrEmpty()) null else memberIdString.toLong()
-    }
-
-    override suspend fun saveMemberId(memberId: Long) {
-        dataStoreManager.saveMemberId(memberId = memberId.toString())
-    }
-
-    override suspend fun clearMemberId() {
-        dataStoreManager.clearMemberId()
-    }
-
 }

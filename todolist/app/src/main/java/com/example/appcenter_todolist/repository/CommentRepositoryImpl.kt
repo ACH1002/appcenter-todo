@@ -17,7 +17,7 @@ class CommentRepositoryImpl(private val apiService: APIService) : CommentReposit
 
     override suspend fun deleteCommentByTodo(
         commentId: Long
-    ): Response<CommonResponse<CommentResponse>> {
+    ): Response<CommonResponse<Void>> {
         return apiService.deleteCommentByTodo(commentId = commentId)
     }
 

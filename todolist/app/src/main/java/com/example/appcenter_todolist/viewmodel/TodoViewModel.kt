@@ -11,6 +11,7 @@ import com.example.appcenter_todolist.repository.TodoRepository
 import com.example.appcenter_todolist.repository.TokenRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
@@ -22,7 +23,7 @@ sealed class TodoListState {
 
 sealed class TodoState {
     object Loading : TodoState()
-    data class Success(val todos: TodoResponse) : TodoState()
+    data class Success(val todo: TodoResponse) : TodoState()
     data class Error(val message: String) : TodoState()
 }
 
@@ -34,18 +35,33 @@ class TodoViewModel(private val todoRepository: TodoRepository, private val toke
     private val _todoState: MutableStateFlow<TodoState> = MutableStateFlow(TodoState.Loading)
     val todoState = _todoState.asStateFlow()
 
-
+    private val _selectedTodoState: MutableStateFlow<TodoState> = MutableStateFlow(TodoState.Loading)
+    val selectedTodoState = _selectedTodoState.asStateFlow()
     init {
-//        fetchTodoList()
+        // 동기화 로직을 init 블록에 추가
+        viewModelScope.launch {
+            combine(
+                todoListState,
+                selectedTodoState
+            ) { todoListState, selectedTodo ->
+                Pair(todoListState, selectedTodo)
+            }.collect { (todoListState, selectedTodoState) ->
+                if (todoListState is TodoListState.Success && selectedTodoState is TodoState.Success) {
+                    val updatedSelectedTodo = todoListState.todos.find { it.id == selectedTodoState.todo.id }
+                    if (updatedSelectedTodo != null) {
+                        _selectedTodoState.update { TodoState.Success(todo = updatedSelectedTodo) }
+                    } else {
+                        _selectedTodoState.update { TodoState.Error("Selected todo not found in the updated list") }
+                    }
+                }
+            }
+        }
     }
-    private suspend fun getMemberId(): Long {
-        return tokenRepository.getMember() ?: throw Exception("Member ID가 저장되어 있지 않습니다.")
-    }
+
     fun fetchTodoList() {
         viewModelScope.launch {
             try {
-                val memberId = getMemberId()
-                val response = todoRepository.getTodos(memberId = memberId)
+                val response = todoRepository.getMyTodos()
                 if (response.isSuccessful){
                     val newTodoList = response.body() ?: throw Exception("TodoList 정보가 비어있습니다.")
                     _todoListState.update { TodoListState.Success(newTodoList.response) }
@@ -68,11 +84,11 @@ class TodoViewModel(private val todoRepository: TodoRepository, private val toke
     fun addTodo(addTodoReq: AddTodoReq) {
         viewModelScope.launch {
             try {
-                val memberId = getMemberId()
-                val response = todoRepository.addTodo(memberId = memberId, addTodoReq = addTodoReq)
+                val response = todoRepository.addTodo(addTodoReq = addTodoReq)
                 if (response.isSuccessful) {
                     val newTodo = response.body() ?: throw Exception("추가한 Todo의 정보가 비어있습니다.")
                     Log.d("addTodo 성공", "새로운 Todo ID: ${newTodo.response}")
+                    fetchTodoList()
                 } else {
                     throw Exception(response.errorBody()?.string())
                 }
@@ -125,19 +141,18 @@ class TodoViewModel(private val todoRepository: TodoRepository, private val toke
                 val response = todoRepository.updateTodoById(todoId = todoId, updateTodoReq = updateTodoReq)
                 if (response.isSuccessful){
                     val newTodo = response.body() ?: throw Exception("수정한 Todo의 정보가 비어있습니다.")
-                    Log.d("updateTodo 성공", "수정한 Todo ID: ${newTodo.response}")
                     fetchTodoList()
                 } else {
                     throw Exception(response.errorBody()?.string())
                 }
             } catch (e: ApiException) {
-                Log.e("투두 수정 실패 원인", e.errorResponse.message)
+                Log.e("updateTodoById 실패 원인", e.errorResponse.message)
                 _todoListState.update { TodoListState.Error(e.errorResponse.message) }
             } catch (e: Exception) {
-                Log.e("투두 수정 실패 원인", e.message.toString())
+                Log.e("updateTodoById 실패 원인", e.message.toString())
                 _todoListState.update { TodoListState.Error(e.message.toString()) }
             } catch (e: RuntimeException){
-                Log.e("투두 수정 시간초과", e.message.toString())
+                Log.e("updateTodoById 시간초과", e.message.toString())
                 _todoListState.update { TodoListState.Error(e.message.toString()) }
             }
         }
@@ -150,22 +165,29 @@ class TodoViewModel(private val todoRepository: TodoRepository, private val toke
             try {
                 val response = todoRepository.completeTodoById( todoId = todoId)
                 if (response.isSuccessful){
-                    val newTodo = response.body() ?: throw Exception("삭제한 Todo의 정보가 비어있습니다.")
-                    Log.d("deleteTodo 성공", "삭제한 Todo ID: ${newTodo.response}")
+                    val newTodo = response.body() ?: throw Exception("완료한 Todo의 정보가 비어있습니다.")
                     fetchTodoList()
                 } else {
                     throw Exception(response.errorBody()?.string())
                 }
             } catch (e: ApiException) {
-                Log.e("투두 삭제 실패 원인", e.errorResponse.message)
+                Log.e("completeTodoById 실패 원인", e.errorResponse.message)
                 _todoListState.update { TodoListState.Error(e.errorResponse.message) }
             } catch (e: Exception) {
-                Log.e("투두 삭제 실패 원인", e.message.toString())
+                Log.e("completeTodoById 실패 원인", e.message.toString())
                 _todoListState.update { TodoListState.Error(e.message.toString()) }
             } catch (e: RuntimeException){
-                Log.e("투두 삭제 시간초과", e.message.toString())
+                Log.e("completeTodoById 시간초과", e.message.toString())
                 _todoListState.update { TodoListState.Error(e.message.toString()) }
             }
         }
+    }
+
+    fun setSelectedTodoState(todo: TodoResponse) {
+        _selectedTodoState.update { TodoState.Success(todo = todo) }
+    }
+
+    fun clearSelectedTodoState() {
+        _selectedTodoState.update { TodoState.Loading }
     }
 }

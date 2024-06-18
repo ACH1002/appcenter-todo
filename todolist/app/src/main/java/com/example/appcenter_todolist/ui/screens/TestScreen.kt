@@ -374,12 +374,12 @@ fun TestScreen(
                 )
             Button(
                 onClick = {
-                    todoViewModel.addTodo(
-                        addTodoReq = AddTodoReq(
-                            content = todoContent.text,
-                            deadLine = LocalDate.of(2024, 5, 31)
-                        )
-                    )
+//                    todoViewModel.addTodo(
+//                        addTodoReq = AddTodoReq(
+//                            content = todoContent.text,
+//                            deadLine = LocalDate.of(2024, 5, 31)
+//                        )
+//                    )
                     todoContent = TextFieldValue("")
                 },
                 shape = RoundedCornerShape(10.dp),
@@ -402,7 +402,7 @@ fun TestScreen(
 
         Button(
             onClick = {
-                todoViewModel.fetchTodoList()
+//                todoViewModel.fetchTodoList()
             },
             modifier = Modifier
                 .fillMaxWidth(),
@@ -454,9 +454,9 @@ fun TestScreen(
                                 Checkbox(
                                     checked = todo.completed,
                                     onCheckedChange = {
-                                        todoViewModel.completeTodoById(
-                                            todoId = todo.id
-                                        )
+//                                        todoViewModel.completeTodoById(
+//                                            todoId = todo.id
+//                                        )
                                     },
                                     colors = CheckboxDefaults.colors(
                                         checkedColor = Color.Green,
@@ -478,9 +478,9 @@ fun TestScreen(
                             }
                             Button(
                                 onClick = {
-                                    todoViewModel.deleteTodoById(
-                                        todoId = todo.id
-                                    )
+//                                    todoViewModel.deleteTodoById(
+//                                        todoId = todo.id
+//                                    )
                                 },
                                 shape = RoundedCornerShape(10.dp),
                                 colors = ButtonDefaults.buttonColors(

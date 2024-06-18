@@ -7,11 +7,13 @@ import com.example.appcenter_todolist.model.todo.UpdateTodoReq
 import retrofit2.Response
 
 interface TodoRepository {
-    suspend fun getMyTodos(): Response<CommonResponse<List<TodoResponse>>>
+    suspend fun getTodosByBucket(
+        bucketId: Long
+    ): Response<CommonResponse<List<TodoResponse>>>
 
-    suspend fun getTodosByNickname(nickname: String): Response<CommonResponse<List<TodoResponse>>>
 
     suspend fun addTodo(
+        bucketId: Long,
         addTodoReq: AddTodoReq
     ): Response<CommonResponse<TodoResponse>>
 

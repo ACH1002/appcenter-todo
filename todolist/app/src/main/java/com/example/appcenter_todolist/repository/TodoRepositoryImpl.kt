@@ -8,19 +8,14 @@ import com.example.appcenter_todolist.network.APIService
 import retrofit2.Response
 
 class TodoRepositoryImpl(private val apiService: APIService) : TodoRepository {
-    override suspend fun getMyTodos(): Response<CommonResponse<List<TodoResponse>>> {
-        return apiService.getMyTodos()
+    override suspend fun getTodosByBucket(bucketId: Long): Response<CommonResponse<List<TodoResponse>>> {
+        return apiService.getTodosByBucket(bucketId = bucketId)
     }
 
-    override suspend fun getTodosByNickname(nickname: String): Response<CommonResponse<List<TodoResponse>>> {
-        return apiService.getTodosByNickname(nickname = nickname)
+    override suspend fun addTodo(bucketId: Long, addTodoReq: AddTodoReq): Response<CommonResponse<TodoResponse>> {
+        return apiService.addTodo(bucketId = bucketId,addTodoReq = addTodoReq)
+
     }
-
-
-    override suspend fun addTodo(addTodoReq: AddTodoReq): Response<CommonResponse<TodoResponse>> {
-        return apiService.addTodo(addTodoReq = addTodoReq)
-    }
-
     override suspend fun deleteTodoById(
         todoId: Long
     ): Response<CommonResponse<Void>> {

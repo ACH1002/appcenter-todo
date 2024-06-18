@@ -13,14 +13,20 @@ class LocalDateAdapter : TypeAdapter<LocalDate>() {
     @RequiresApi(Build.VERSION_CODES.O)
     private val formatter = DateTimeFormatter.ISO_LOCAL_DATE
 
-    @RequiresApi(Build.VERSION_CODES.O)
     override fun write(out: JsonWriter, value: LocalDate) {
-        out.value(value.format(formatter))
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            out.value(value.format(formatter))
+        } else {
+            throw UnsupportedOperationException("LocalDate is not supported on this API level")
+        }
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
     override fun read(`in`: JsonReader): LocalDate {
-        return LocalDate.parse(`in`.nextString(), formatter)
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            LocalDate.parse(`in`.nextString(), formatter)
+        } else {
+            throw UnsupportedOperationException("LocalDate is not supported on this API level")
+        }
     }
 }
 
@@ -28,16 +34,23 @@ class LocalDateTimeAdapter : TypeAdapter<LocalDateTime>() {
     @RequiresApi(Build.VERSION_CODES.O)
     private val formatter = DateTimeFormatter.ISO_LOCAL_DATE_TIME
 
-    @RequiresApi(Build.VERSION_CODES.O)
     override fun write(out: JsonWriter, value: LocalDateTime) {
-        out.value(value.format(formatter))
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            out.value(value.format(formatter))
+        } else {
+            throw UnsupportedOperationException("LocalDateTime is not supported on this API level")
+        }
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
     override fun read(`in`: JsonReader): LocalDateTime {
-        return LocalDateTime.parse(`in`.nextString(), formatter)
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            LocalDateTime.parse(`in`.nextString(), formatter)
+        } else {
+            throw UnsupportedOperationException("LocalDateTime is not supported on this API level")
+        }
     }
 }
+
 
 object GsonProvider {
     @RequiresApi(Build.VERSION_CODES.O)

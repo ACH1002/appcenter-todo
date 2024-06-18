@@ -1,12 +1,11 @@
-package com.example.appcenter_todolist.model.todo
+package com.example.appcenter_todolist.model.bucket
 
 import com.google.gson.annotations.SerializedName
-import java.time.LocalDate
 import java.time.LocalDateTime
 
-data class TodoResponse (
-    @SerializedName("todoId")
-    val id : Long,
+data class BucketResponse(
+    @SerializedName("bucketId")
+    val bucketId : Long,
     @SerializedName("content")
     val content : String,
     @SerializedName("deadLine")
@@ -18,5 +17,5 @@ data class TodoResponse (
     @SerializedName("createdTime")
     val createdTime : LocalDateTime,
     @SerializedName("modifiedTime")
-    val modifiedTime : LocalDateTime,
+    val modifiedTime : LocalDateTime
 )

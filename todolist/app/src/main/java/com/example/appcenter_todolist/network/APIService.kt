@@ -4,6 +4,9 @@ import com.example.appcenter_todolist.model.comment.AddCommentReq
 import com.example.appcenter_todolist.model.todo.AddTodoReq
 import com.example.appcenter_todolist.model.comment.CommentResponse
 import com.example.appcenter_todolist.model.CommonResponse
+import com.example.appcenter_todolist.model.bucket.AddBucketRequest
+import com.example.appcenter_todolist.model.bucket.BucketResponse
+import com.example.appcenter_todolist.model.bucket.UpdateBucketRequest
 import com.example.appcenter_todolist.model.member.SignupMemberReq
 import com.example.appcenter_todolist.model.todo.TodoResponse
 import com.example.appcenter_todolist.model.comment.UpdateCommentReq
@@ -21,6 +24,7 @@ import retrofit2.http.Path
 import retrofit2.http.Query
 
 interface APIService {
+    //Member API
     //회원 가입
     @POST("/members")
     suspend fun signUp(
@@ -43,18 +47,20 @@ interface APIService {
         @Body loginMemberReq: LoginMemberReq
     ): Response<CommonResponse<Void>>
 
+    //Todo API
     //전체 투두 조회
     @GET("/todos")
-    suspend fun getMyTodos(): Response<CommonResponse<List<TodoResponse>>>
+    suspend fun getTodosByBucket(@Query("bucketId") bucketId: Long): Response<CommonResponse<List<TodoResponse>>>
 
-    @GET("/todos/by-nickname")
-    suspend fun getTodosByNickname(
-        @Query("nickname") nickname : String
-    ): Response<CommonResponse<List<TodoResponse>>>
+//    @GET("/todos/by-nickname")
+//    suspend fun getTodosByNickname(
+//        @Query("nickname") nickname : String
+//    ): Response<CommonResponse<List<TodoResponse>>>
 
     //투두 추가
     @POST("/todos")
     suspend fun addTodo(
+        @Query("bucketId") bucketId: Long,
         @Body addTodoReq: AddTodoReq
     ): Response<CommonResponse<TodoResponse>>
 
@@ -77,7 +83,7 @@ interface APIService {
         @Path("todoId") todoId: Long,
     ): Response<CommonResponse<TodoResponse>>
 
-    //댓글 -----------
+    //Comment API
 
     //단일 댓글 추가
     @POST("/comments")
@@ -111,4 +117,35 @@ interface APIService {
     suspend fun getCommentsByTodo(
         @Query("todoId") todoId: Long,
     ): Response<CommonResponse<List<CommentResponse>>>
+
+
+    //Bucket API
+    @GET("/buckets")
+    suspend fun getMyBuckets() : Response<CommonResponse<List<BucketResponse>>>
+
+    @POST("/buckets")
+    suspend fun addBucket(
+        @Body addBucketRequest: AddBucketRequest
+    ) : Response<CommonResponse<BucketResponse>>
+
+    @DELETE("/buckets/{bucketId}")
+    suspend fun deleteBucket(
+        @Path("bucketId") bucketId: Long
+    ) : Response<CommonResponse<Void>>
+
+    @PATCH("/buckets/{bucketId}")
+    suspend fun updateBucket(
+        @Path("bucketId") bucketId: Long,
+        @Body updateBucketRequest: UpdateBucketRequest
+    ) : Response<CommonResponse<BucketResponse>>
+
+    @PATCH("/buckets/{bucketId}/complete")
+    suspend fun completeBucket(
+        @Path("bucketId") bucketId: Long
+    ): Response<CommonResponse<BucketResponse>>
+
+    @GET("/buckets/by-nickname")
+    suspend fun getBucketsByNickname(
+        @Query("nickname") nickname: String
+    ) : Response<CommonResponse<List<BucketResponse>>>
 }

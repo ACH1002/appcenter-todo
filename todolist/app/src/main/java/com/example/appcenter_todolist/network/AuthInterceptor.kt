@@ -1,5 +1,6 @@
 package com.example.appcenter_todolist.network
 
+import androidx.lifecycle.MutableLiveData
 import com.example.appcenter_todolist.DataStoreManager
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
@@ -25,10 +26,16 @@ class AuthInterceptor(private val dataStoreManager: DataStoreManager) : Intercep
 
         if (response.code == 401) {
             runBlocking {
+                TokenExpirationEvent.expired.postValue(true)
+
                 dataStoreManager.clearToken()
             }
         }
 
         return response
     }
+}
+
+object TokenExpirationEvent {
+    val expired = MutableLiveData<Boolean>(false)
 }

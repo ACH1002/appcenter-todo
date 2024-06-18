@@ -58,10 +58,10 @@ class TodoViewModel(private val todoRepository: TodoRepository, private val toke
         }
     }
 
-    fun fetchTodoList() {
+    fun fetchTodoList(bucketId: Long) {
         viewModelScope.launch {
             try {
-                val response = todoRepository.getMyTodos()
+                val response = todoRepository.getTodosByBucket(bucketId = bucketId)
                 if (response.isSuccessful){
                     val newTodoList = response.body() ?: throw Exception("TodoList 정보가 비어있습니다.")
                     _todoListState.update { TodoListState.Success(newTodoList.response) }
@@ -81,14 +81,14 @@ class TodoViewModel(private val todoRepository: TodoRepository, private val toke
         }
     }
 
-    fun addTodo(addTodoReq: AddTodoReq) {
+    fun addTodo(bucketId: Long,addTodoReq: AddTodoReq) {
         viewModelScope.launch {
             try {
-                val response = todoRepository.addTodo(addTodoReq = addTodoReq)
+                val response = todoRepository.addTodo(bucketId = bucketId,addTodoReq = addTodoReq)
                 if (response.isSuccessful) {
                     val newTodo = response.body() ?: throw Exception("추가한 Todo의 정보가 비어있습니다.")
                     Log.d("addTodo 성공", "새로운 Todo ID: ${newTodo.response}")
-                    fetchTodoList()
+                    fetchTodoList(bucketId = bucketId)
                 } else {
                     throw Exception(response.errorBody()?.string())
                 }
@@ -107,6 +107,7 @@ class TodoViewModel(private val todoRepository: TodoRepository, private val toke
 
 
     fun deleteTodoById(
+        bucketId: Long,
         todoId : Long
     ){
         viewModelScope.launch {
@@ -115,7 +116,7 @@ class TodoViewModel(private val todoRepository: TodoRepository, private val toke
                 if (response.isSuccessful){
                     val deletedTodo = response.body() ?: throw Exception("삭제한 Todo의 정보가 비어있습니다.")
                     Log.d("deleteTodo 성공", "삭제된 Todo ID: ${deletedTodo.response}")
-                    fetchTodoList()
+                    fetchTodoList(bucketId = bucketId)
                 } else {
                     throw Exception(response.errorBody()?.string())
                 }
@@ -133,6 +134,7 @@ class TodoViewModel(private val todoRepository: TodoRepository, private val toke
     }
 
     fun updateTodoById(
+        bucketId: Long,
         todoId: Long,
         updateTodoReq: UpdateTodoReq
     ){
@@ -141,7 +143,7 @@ class TodoViewModel(private val todoRepository: TodoRepository, private val toke
                 val response = todoRepository.updateTodoById(todoId = todoId, updateTodoReq = updateTodoReq)
                 if (response.isSuccessful){
                     val newTodo = response.body() ?: throw Exception("수정한 Todo의 정보가 비어있습니다.")
-                    fetchTodoList()
+                    fetchTodoList(bucketId = bucketId)
                 } else {
                     throw Exception(response.errorBody()?.string())
                 }
@@ -159,6 +161,7 @@ class TodoViewModel(private val todoRepository: TodoRepository, private val toke
     }
 
     fun completeTodoById(
+        bucketId: Long,
         todoId: Long
     ){
         viewModelScope.launch {
@@ -166,7 +169,7 @@ class TodoViewModel(private val todoRepository: TodoRepository, private val toke
                 val response = todoRepository.completeTodoById( todoId = todoId)
                 if (response.isSuccessful){
                     val newTodo = response.body() ?: throw Exception("완료한 Todo의 정보가 비어있습니다.")
-                    fetchTodoList()
+                    fetchTodoList(bucketId = bucketId)
                 } else {
                     throw Exception(response.errorBody()?.string())
                 }

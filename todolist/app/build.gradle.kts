@@ -68,9 +68,20 @@ dependencies {
     debugImplementation("androidx.compose.ui:ui-tooling")
     debugImplementation("androidx.compose.ui:ui-test-manifest")
 
-
     val koin_android_version = "3.4.0"
     val koin_android_compose_version = "3.4.4"
+    val nav_version = "2.7.7"
+
+    // LiveData
+    implementation ("androidx.compose.runtime:runtime-livedata:1.6.8")
+
+
+    // Google Font
+    implementation("androidx.compose.ui:ui-text-google-fonts:1.6.8")
+
+    // Navigation
+    implementation ("androidx.navigation:navigation-compose:$nav_version")
+
     // Koin
     implementation ("io.insert-koin:koin-android:$koin_android_version")
     implementation ("io.insert-koin:koin-androidx-compose:$koin_android_compose_version")

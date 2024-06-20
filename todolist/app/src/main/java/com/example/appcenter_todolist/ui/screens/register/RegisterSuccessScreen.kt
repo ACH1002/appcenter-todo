@@ -12,8 +12,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.example.appcenter_todolist.navigation.AppNavigationActionsBeforeLogin
-import com.example.appcenter_todolist.ui.components.ButtonBeforeLogin
-import com.example.appcenter_todolist.ui.components.ToolBarBeforeLogin
+import com.example.appcenter_todolist.ui.components.button.ButtonBeforeLogin
+import com.example.appcenter_todolist.ui.components.toolbar.ToolBarBeforeLogin
 import com.example.appcenter_todolist.ui.theme.BlackTextColor
 import com.example.appcenter_todolist.ui.theme.CustomTypography
 import com.example.appcenter_todolist.ui.theme.Dimensions

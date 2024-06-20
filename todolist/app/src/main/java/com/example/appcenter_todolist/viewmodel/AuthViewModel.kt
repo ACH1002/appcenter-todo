@@ -1,17 +1,12 @@
 package com.example.appcenter_todolist.viewmodel
 
 import android.util.Log
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.appcenter_todolist.network.ApiException
 import com.example.appcenter_todolist.network.TokenExpirationEvent
-import com.example.appcenter_todolist.repository.BucketRepository
-import com.example.appcenter_todolist.repository.MemberRepository
-import com.example.appcenter_todolist.repository.TokenRepository
-import kotlinx.coroutines.delay
+import com.example.appcenter_todolist.repository.bucket.BucketRepository
+import com.example.appcenter_todolist.repository.token.TokenRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update

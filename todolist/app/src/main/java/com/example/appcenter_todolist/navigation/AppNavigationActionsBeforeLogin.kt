@@ -12,57 +12,56 @@ import com.example.appcenter_todolist.navigation.AllDestination.WELCOME
 
 class AppNavigationActionsBeforeLogin(private val navController: NavController) {
 
-
-    fun navigateToWelcome(){
-        navController.navigate(WELCOME){
-            popUpTo(WELCOME) {inclusive = true}
+    fun navigateToWelcome() {
+        navController.navigate(WELCOME) {
+            popUpTo(WELCOME) { inclusive = true }
         }
     }
-    fun navigateToRegister(){
-        navController.navigate(REGISTER){
-            launchSingleTop = true
-            restoreState = true
-        }
 
-    }
-
-    fun navigateToRegisterNickname(){
-        navController.navigate(REGISTERNICKNAME){
-            launchSingleTop = true
-            restoreState = true
-        }
-
-    }
-    fun navigateToRegisterSuccess(){
-        navController.navigate(REGISTERSUCCESS){
+    fun navigateToRegister() {
+        navController.navigate(REGISTER) {
             launchSingleTop = true
             restoreState = true
         }
     }
 
-    fun navigateToLogin(){
-        navController.navigate(LOGIN){
+    fun navigateToRegisterNickname() {
+        navController.navigate(REGISTERNICKNAME) {
             launchSingleTop = true
             restoreState = true
         }
     }
 
-    fun navigateToMyBuckets(){
-        navController.navigate(MYBUCKETS){
+    fun navigateToRegisterSuccess() {
+        navController.navigate(REGISTERSUCCESS) {
             launchSingleTop = true
             restoreState = true
         }
     }
 
-    fun navigateToOurBuckets(){
-        navController.navigate(OURBUCKETS){
+    fun navigateToLogin() {
+        navController.navigate(LOGIN) {
             launchSingleTop = true
             restoreState = true
         }
     }
 
-    fun navigateToOurDetailBuckets(){
-        navController.navigate(OURDETAILBUCKETS){
+    fun navigateToMyBuckets() {
+        navController.navigate(MYBUCKETS) {
+            launchSingleTop = true
+            restoreState = true
+        }
+    }
+
+    fun navigateToOurBuckets() {
+        navController.navigate(OURBUCKETS) {
+            launchSingleTop = true
+            restoreState = true
+        }
+    }
+
+    fun navigateToOurDetailBuckets() {
+        navController.navigate(OURDETAILBUCKETS) {
             launchSingleTop = true
             restoreState = true
         }
@@ -71,5 +70,4 @@ class AppNavigationActionsBeforeLogin(private val navController: NavController) 
     fun popBackStack() {
         navController.popBackStack()
     }
-
 }

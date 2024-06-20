@@ -8,5 +8,5 @@ data class AddTodoReq(
     @SerializedName("content")
     val content : String,
     @SerializedName("deadLine")
-    val deadLine : LocalDate
+    val deadLine : String
 )

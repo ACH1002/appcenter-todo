@@ -2,7 +2,7 @@ package com.example.appcenter_todolist.network
 
 import android.os.Build
 import androidx.annotation.RequiresApi
-import com.example.appcenter_todolist.DataStoreManager
+import com.example.appcenter_todolist.datastore.DataStoreManager
 import com.google.gson.Gson
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor

@@ -1,7 +1,7 @@
 package com.example.appcenter_todolist.network
 
 import androidx.lifecycle.MutableLiveData
-import com.example.appcenter_todolist.DataStoreManager
+import com.example.appcenter_todolist.datastore.DataStoreManager
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 import okhttp3.Interceptor

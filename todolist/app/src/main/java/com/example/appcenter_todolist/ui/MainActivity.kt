@@ -18,16 +18,25 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.appcenter_todolist.navigation.AllDestination
+import com.example.appcenter_todolist.navigation.AppNavigationActionsAfterLogin
 import com.example.appcenter_todolist.navigation.AppNavigationActionsBeforeLogin
 import com.example.appcenter_todolist.network.TokenExpirationEvent
 import com.example.appcenter_todolist.ui.screens.login.LoginScreen
 import com.example.appcenter_todolist.ui.screens.register.RegisterScreen
 import com.example.appcenter_todolist.ui.screens.WelcomeScreen
+import com.example.appcenter_todolist.ui.screens.mybucket.MyBucketDetailScreen
 import com.example.appcenter_todolist.ui.screens.mybucket.MyBucketsScreen
+import com.example.appcenter_todolist.ui.screens.ourbucket.OurBucketDetailScreen
+import com.example.appcenter_todolist.ui.screens.ourbucket.OurBucketsScreen
+import com.example.appcenter_todolist.ui.screens.ourbucket.OurMemberDetailBucketList
 import com.example.appcenter_todolist.ui.screens.register.RegisterSuccessScreen
 import com.example.appcenter_todolist.ui.theme.Appcenter_todolistTheme
 import com.example.appcenter_todolist.viewmodel.AuthViewModel
+import com.example.appcenter_todolist.viewmodel.BucketViewModel
+import com.example.appcenter_todolist.viewmodel.CommentViewModel
 import com.example.appcenter_todolist.viewmodel.MemberViewModel
+import com.example.appcenter_todolist.viewmodel.TodoViewModel
+import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import org.koin.androidx.compose.koinViewModel
 
 class MainActivity : ComponentActivity() {
@@ -36,43 +45,90 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             Appcenter_todolistTheme {
-                // A surface container using the 'background' color from the theme
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = Color.White
                 ) {
+                    val systemUiController = rememberSystemUiController()
+                    systemUiController.isNavigationBarVisible = false
+
                     val navController = rememberNavController()
                     val appNavigationActionsBeforeLogin =
                         remember(navController) { AppNavigationActionsBeforeLogin(navController) }
-                    val appNavigationActionsBeforeLoginAfterLogin =
-                        remember(navController) { AppNavigationActionsBeforeLogin(navController) }
-                    val authViewModel : AuthViewModel = koinViewModel()
-                    val isTokenValid by authViewModel.isTokenValid.collectAsState()
+                    val appNavigationActionsAfterLogin =
+                        remember(navController) { AppNavigationActionsAfterLogin(navController) }
+                    val authViewModel: AuthViewModel = koinViewModel()
+                    val memberViewModel: MemberViewModel = koinViewModel()
+                    val loginState by memberViewModel.loginState.collectAsState()
+                    val bucketViewModel: BucketViewModel = koinViewModel()
+                    val todoViewModel: TodoViewModel = koinViewModel()
+                    val commentViewModel: CommentViewModel = koinViewModel()
 
-                    LaunchedEffect(Unit){
-                        authViewModel.checkTokenValidity()
+                    val isCheckValidity by memberViewModel.isCheckValidity.collectAsState()
+
+                    if (!isCheckValidity) {
+                        LaunchedEffect(Unit) {
+                            memberViewModel.checkTokenValidity()
+                            memberViewModel.isCheckValidity()
+                        }
                     }
 
-                    LaunchedEffect(isTokenValid) {
-                        TokenExpirationEvent.expired.postValue(true)
-                    }
-
-                    val memberViewModel : MemberViewModel = koinViewModel()
                     val tokenExpired = TokenExpirationEvent.expired.observeAsState()
-                    if (isTokenValid == true || tokenExpired.value == false){
+
+                    LaunchedEffect(tokenExpired.value) {
+                        if (tokenExpired.value == true) {
+                            memberViewModel.checkTokenValidity()
+                            navController.navigate(AllDestination.WELCOME) {
+                                popUpTo(navController.graph.startDestinationId) {
+                                    inclusive = true
+                                }
+                            }
+                        }
+                    }
+
+                    if (loginState && tokenExpired.value == false) {
                         NavHost(
                             navController = navController,
                             startDestination = AllDestination.MYBUCKETS
                         ) {
                             composable(AllDestination.MYBUCKETS) {
                                 MyBucketsScreen(
-                                    appNavigationActionsBeforeLoginAfterLogin
-                                ) }
+                                    appNavigationActionsAfterLogin = appNavigationActionsAfterLogin,
+                                    bucketViewModel = bucketViewModel,
+                                    memberViewModel = memberViewModel
+                                )
+                            }
+                            composable(AllDestination.MYDETAILBUCKET) {
+                                MyBucketDetailScreen(
+                                    appNavigationActionsAfterLogin = appNavigationActionsAfterLogin,
+                                    bucketViewModel = bucketViewModel,
+                                    todoViewModel = todoViewModel,
+                                    commentViewModel = commentViewModel,
+                                    memberViewModel = memberViewModel,
+                                )
+                            }
                             composable(AllDestination.OURBUCKETS) {
-
+                                OurBucketsScreen(
+                                    appNavigationActionsAfterLogin = appNavigationActionsAfterLogin,
+                                    memberViewModel = memberViewModel,
+                                    bucketViewModel = bucketViewModel
+                                )
                             }
                             composable(AllDestination.OURDETAILBUCKETS) {
-
+                                OurBucketDetailScreen(
+                                    appNavigationActionsAfterLogin = appNavigationActionsAfterLogin,
+                                    bucketViewModel = bucketViewModel,
+                                    todoViewModel = todoViewModel,
+                                    commentViewModel = commentViewModel,
+                                    memberViewModel = memberViewModel
+                                )
+                            }
+                            composable(AllDestination.OURMEMBERDETAILBUCKETS) {
+                                OurMemberDetailBucketList(
+                                    appNavigationActionsAfterLogin = appNavigationActionsAfterLogin,
+                                    bucketViewModel = bucketViewModel,
+                                    memberViewModel = memberViewModel
+                                )
                             }
                         }
                     } else {
@@ -80,10 +136,13 @@ class MainActivity : ComponentActivity() {
                             navController = navController,
                             startDestination = AllDestination.WELCOME
                         ) {
-                            composable(AllDestination.WELCOME) { WelcomeScreen(appNavigationActionsBeforeLogin) }
+                            composable(AllDestination.WELCOME) {
+                                WelcomeScreen(appNavigationActionsBeforeLogin)
+                            }
                             composable(AllDestination.LOGIN) {
                                 LoginScreen(
                                     appNavigationActionsBeforeLogin,
+                                    appNavigationActionsAfterLogin,
                                     memberViewModel = memberViewModel
                                 )
                             }
@@ -102,7 +161,6 @@ class MainActivity : ComponentActivity() {
                     }
                 }
             }
-
         }
     }
 }

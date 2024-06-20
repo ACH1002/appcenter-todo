@@ -3,7 +3,7 @@ package com.example.appcenter_todolist.network
 import com.example.appcenter_todolist.model.comment.AddCommentReq
 import com.example.appcenter_todolist.model.todo.AddTodoReq
 import com.example.appcenter_todolist.model.comment.CommentResponse
-import com.example.appcenter_todolist.model.CommonResponse
+import com.example.appcenter_todolist.model.error.CommonResponse
 import com.example.appcenter_todolist.model.bucket.AddBucketRequest
 import com.example.appcenter_todolist.model.bucket.BucketResponse
 import com.example.appcenter_todolist.model.bucket.UpdateBucketRequest
@@ -34,6 +34,11 @@ interface APIService {
     @GET("/members")
     suspend fun getMemberInfo(): Response<CommonResponse<MemberResponse>>
 
+    @GET("/members/by-nickname")
+    suspend fun getMemberInfoByNickname(
+        @Query("nickname") nickname: String
+    ): Response<CommonResponse<MemberResponse>>
+
     @DELETE("/members")
     suspend fun deleteMember(): Response<CommonResponse<Void>>
 
@@ -46,6 +51,12 @@ interface APIService {
     suspend fun login(
         @Body loginMemberReq: LoginMemberReq
     ): Response<CommonResponse<Void>>
+
+    @GET("/members/random")
+    suspend fun getRandomMembers(
+        @Query("limit") limit : Int = 3
+    ): Response<CommonResponse<List<MemberResponse>>>
+
 
     //Todo API
     //전체 투두 조회

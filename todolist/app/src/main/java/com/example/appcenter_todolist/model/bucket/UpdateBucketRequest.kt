@@ -7,5 +7,5 @@ data class UpdateBucketRequest(
     @SerializedName("content")
     val content: String,
     @SerializedName("deadLine")
-    val deadLine: LocalDateTime
+    val deadLine: String
 )

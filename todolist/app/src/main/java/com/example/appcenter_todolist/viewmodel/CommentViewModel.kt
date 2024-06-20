@@ -6,10 +6,8 @@ import androidx.lifecycle.viewModelScope
 import com.example.appcenter_todolist.model.comment.AddCommentReq
 import com.example.appcenter_todolist.model.comment.CommentResponse
 import com.example.appcenter_todolist.model.comment.UpdateCommentReq
-import com.example.appcenter_todolist.model.member.SignupMemberReq
-import com.example.appcenter_todolist.model.todo.TodoResponse
 import com.example.appcenter_todolist.network.ApiException
-import com.example.appcenter_todolist.repository.CommentRepository
+import com.example.appcenter_todolist.repository.comment.CommentRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
@@ -26,6 +24,8 @@ class CommentViewModel(private val commentRepository: CommentRepository) : ViewM
     private val _commentListState: MutableStateFlow<CommentListState> = MutableStateFlow(CommentListState.Loading)
     val commentListState = _commentListState.asStateFlow()
 
+    private val _addCommentState: MutableStateFlow<Boolean?> = MutableStateFlow(null)
+    val addCommentState = _addCommentState.asStateFlow()
 
     fun fetchComments(
         todoId: Long
@@ -59,14 +59,19 @@ class CommentViewModel(private val commentRepository: CommentRepository) : ViewM
                 if (response.isSuccessful){
                     val addedComment = response.body() ?: throw Exception("추가한 Comment 정보가 비어있습니다.")
                     fetchComments(todoId = todoId)
+                    _addCommentState.update { true }
                 } else {
+                    _addCommentState.update { false }
                     throw Exception(response.errorBody()?.string())
                 }
             } catch (e: ApiException) {
+                _addCommentState.update { false }
                 Log.e("addCommentByTodo 실패 원인", e.errorResponse.message)
             } catch (e: Exception) {
+                _addCommentState.update { false }
                 Log.e("addCommentByTodo 실패 원인", e.message.toString())
             } catch (e: RuntimeException){
+                _addCommentState.update { false }
                 Log.e("addCommentByTodo 시간초과", e.message.toString())
             }
         }
@@ -117,6 +122,11 @@ class CommentViewModel(private val commentRepository: CommentRepository) : ViewM
                 Log.e("deleteCommentByTodo 시간초과", e.message.toString())
             }
         }
+    }
+
+
+    fun clearAddTodoState(){
+        _addCommentState.update { null }
     }
 
 }

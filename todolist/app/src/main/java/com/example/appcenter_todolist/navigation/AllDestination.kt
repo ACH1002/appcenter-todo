@@ -7,6 +7,8 @@ object AllDestination {
     const val REGISTERSUCCESS = "RegisterSuccess"
     const val LOGIN = "LogIn"
     const val MYBUCKETS = "MyBuckets"
+    const val MYDETAILBUCKET = "MyDetailBucket"
     const val OURBUCKETS = "OurBuckets"
     const val OURDETAILBUCKETS = "OurDetailBuckets"
+    const val OURMEMBERDETAILBUCKETS = "OurMemberDetailBuckets"
 }

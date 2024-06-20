@@ -1,7 +1,6 @@
 package com.example.appcenter_todolist.network
 
-import android.util.Log
-import com.example.appcenter_todolist.model.ErrorResponse
+import com.example.appcenter_todolist.model.error.ErrorResponse
 import com.google.gson.Gson
 import okhttp3.Interceptor
 import okhttp3.Response

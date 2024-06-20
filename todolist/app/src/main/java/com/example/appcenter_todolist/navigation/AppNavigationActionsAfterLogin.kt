@@ -12,6 +12,13 @@ class AppNavigationActionsAfterLogin(private val navController: NavController) {
         }
     }
 
+    fun navigateToMyDetailBucket(){
+        navController.navigate(AllDestination.MYDETAILBUCKET){
+            launchSingleTop = true
+            restoreState = true
+        }
+    }
+
     fun navigateToOurBuckets(){
         navController.navigate(AllDestination.OURBUCKETS){
             launchSingleTop = true
@@ -26,8 +33,20 @@ class AppNavigationActionsAfterLogin(private val navController: NavController) {
         }
     }
 
+    fun navigateToOurMemberDetailBuckets(){
+        navController.navigate(AllDestination.OURMEMBERDETAILBUCKETS){
+            launchSingleTop = true
+            restoreState = true
+        }
+    }
+
     fun popBackStack() {
         navController.popBackStack()
+    }
+
+    fun getCurrentScreen(): String? {
+        val currentDestination = navController.currentBackStackEntry?.destination
+        return currentDestination?.route
     }
 
 }

@@ -22,11 +22,19 @@ import com.example.appcenter_todolist.ui.theme.ButtonContainer
 import com.example.appcenter_todolist.ui.theme.ButtonContent
 import com.example.appcenter_todolist.ui.theme.CustomTypography
 import com.example.appcenter_todolist.ui.theme.Dimensions
+import com.google.accompanist.systemuicontroller.rememberSystemUiController
 
 @Composable
 fun WelcomeScreen(
     appNavigationActionsBeforeLogin: AppNavigationActionsBeforeLogin
 ) {
+
+    val systemUiController = rememberSystemUiController()
+
+    systemUiController.setSystemBarsColor(
+        color = Background, // 원하는 색상으로 변경
+    )
+
     Column(
         modifier = Modifier
             .fillMaxSize()

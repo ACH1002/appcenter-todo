@@ -72,6 +72,14 @@ dependencies {
     val koin_android_compose_version = "3.4.4"
     val nav_version = "2.7.7"
 
+    //Toasty
+    implementation ("com.github.GrenderG:Toasty:1.5.2")
+
+    //SystemBar
+    implementation ("com.google.accompanist:accompanist-systemuicontroller:0.34.0")
+    implementation ("com.google.accompanist:accompanist-swiperefresh:0.34.0")
+
+
     // LiveData
     implementation ("androidx.compose.runtime:runtime-livedata:1.6.8")
 

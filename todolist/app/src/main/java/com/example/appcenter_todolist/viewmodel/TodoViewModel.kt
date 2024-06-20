@@ -7,8 +7,8 @@ import com.example.appcenter_todolist.model.todo.AddTodoReq
 import com.example.appcenter_todolist.model.todo.TodoResponse
 import com.example.appcenter_todolist.model.todo.UpdateTodoReq
 import com.example.appcenter_todolist.network.ApiException
-import com.example.appcenter_todolist.repository.TodoRepository
-import com.example.appcenter_todolist.repository.TokenRepository
+import com.example.appcenter_todolist.repository.todo.TodoRepository
+import com.example.appcenter_todolist.repository.token.TokenRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
@@ -37,6 +37,9 @@ class TodoViewModel(private val todoRepository: TodoRepository, private val toke
 
     private val _selectedTodoState: MutableStateFlow<TodoState> = MutableStateFlow(TodoState.Loading)
     val selectedTodoState = _selectedTodoState.asStateFlow()
+
+    private val _addTodoState: MutableStateFlow<Boolean?> = MutableStateFlow(null)
+    val addTodoState = _addTodoState.asStateFlow()
     init {
         // 동기화 로직을 init 블록에 추가
         viewModelScope.launch {
@@ -88,18 +91,23 @@ class TodoViewModel(private val todoRepository: TodoRepository, private val toke
                 if (response.isSuccessful) {
                     val newTodo = response.body() ?: throw Exception("추가한 Todo의 정보가 비어있습니다.")
                     Log.d("addTodo 성공", "새로운 Todo ID: ${newTodo.response}")
+                    _addTodoState.update { true }
                     fetchTodoList(bucketId = bucketId)
                 } else {
+                    _addTodoState.update { false }
                     throw Exception(response.errorBody()?.string())
                 }
             } catch (e: ApiException) {
                 Log.e("투두 추가 실패 원인", e.errorResponse.message)
+                _addTodoState.update { false }
                 _todoListState.update { TodoListState.Error(e.errorResponse.message) }
             } catch (e: Exception) {
                 Log.e("투두 추가 실패 원인", e.message.toString())
+                _addTodoState.update { false }
                 _todoListState.update { TodoListState.Error(e.message.toString()) }
             } catch (e: RuntimeException) {
                 Log.e("투두 추가 시간초과", e.message.toString())
+                _addTodoState.update { false }
                 _todoListState.update { TodoListState.Error(e.message.toString()) }
             }
         }
@@ -192,5 +200,9 @@ class TodoViewModel(private val todoRepository: TodoRepository, private val toke
 
     fun clearSelectedTodoState() {
         _selectedTodoState.update { TodoState.Loading }
+    }
+
+    fun clearAddTodoState(){
+        _addTodoState.update { null }
     }
 }

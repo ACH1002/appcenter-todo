@@ -7,5 +7,5 @@ data class UpdateTodoReq(
     @SerializedName("content")
     val content: String,
     @SerializedName("deadLine")
-    val deadLine: LocalDate,
+    val deadLine: String,
 )

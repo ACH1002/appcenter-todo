@@ -7,5 +7,5 @@ data class AddBucketRequest(
     @SerializedName("content")
     val content: String,
     @SerializedName("deadLine")
-    val deadLine: LocalDateTime
+    val deadLine: String
 )

@@ -2,7 +2,6 @@ package com.example.appcenter_todolist.ui.components.button
 
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -13,8 +12,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.example.appcenter_todolist.ui.theme.CustomTypography
-import com.example.appcenter_todolist.ui.theme.OrangeButtonContent
 import com.example.appcenter_todolist.ui.theme.OrangeButtonContainer
+import com.example.appcenter_todolist.ui.theme.OrangeButtonContent
 
 @Composable
 fun ButtonAfterLogin(

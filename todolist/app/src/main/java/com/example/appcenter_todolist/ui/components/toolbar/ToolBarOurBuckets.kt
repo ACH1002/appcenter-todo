@@ -55,7 +55,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import com.example.appcenter_todolist.navigation.AllDestination
-import com.example.appcenter_todolist.navigation.AppNavigationActionsAfterLogin
+import com.example.appcenter_todolist.navigation.AppNavigationActions
 import com.example.appcenter_todolist.ui.theme.Background
 import com.example.appcenter_todolist.ui.theme.BlackTextColor
 import com.example.appcenter_todolist.ui.theme.BottomBackground
@@ -70,13 +70,13 @@ import com.example.appcenter_todolist.viewmodel.SelectedMemberState
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ToolBarOurBuckets(
-    appNavigationActionsAfterLogin: AppNavigationActionsAfterLogin,
+    appNavigationActions: AppNavigationActions,
     bucketViewModel: BucketViewModel,
     memberViewModel: MemberViewModel,
     isBack: Boolean = false,
     content: @Composable (PaddingValues) -> Unit,
 ) {
-    val currentScreen = appNavigationActionsAfterLogin.getCurrentScreen()
+    val currentScreen = appNavigationActions.getCurrentScreen()
     val focusManager = LocalFocusManager.current
 
     var searchMemberContent by rememberSaveable(stateSaver = TextFieldValue.Saver) {
@@ -93,7 +93,7 @@ fun ToolBarOurBuckets(
         if (!isBackButtonPressed) {
             isBackButtonPressed = true
             Log.d("isBack", "isBack")
-            appNavigationActionsAfterLogin.popBackStack()
+            appNavigationActions.popBackStack()
         }
     }
 
@@ -188,7 +188,7 @@ fun ToolBarOurBuckets(
                             if (!isBackButtonPressed) {
                                 isBackButtonPressed = true
                                 Log.d("isBack", "isBack")
-                                appNavigationActionsAfterLogin.popBackStack()
+                                appNavigationActions.popBackStack()
                             }
                         }) {
                             Icon(
@@ -235,7 +235,7 @@ fun ToolBarOurBuckets(
                         modifier = Modifier
                             .weight(1f)
                             .clickable {
-                                appNavigationActionsAfterLogin.navigateToMyBuckets()
+                                appNavigationActions.navigateToMyBuckets()
                             },
                         style = myBucketsStyle,
                         textAlign = TextAlign.Center
@@ -250,7 +250,7 @@ fun ToolBarOurBuckets(
                         modifier = Modifier
                             .weight(1f)
                             .clickable {
-                                appNavigationActionsAfterLogin.navigateToOurBuckets()
+                                appNavigationActions.navigateToOurBuckets()
                             },
                         style = ourBucketsStyle,
                         textAlign = TextAlign.Center

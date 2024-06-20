@@ -23,7 +23,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.example.appcenter_todolist.R
 import com.example.appcenter_todolist.model.bucket.BucketResponse
-import com.example.appcenter_todolist.navigation.AppNavigationActionsAfterLogin
+import com.example.appcenter_todolist.navigation.AppNavigationActions
 import com.example.appcenter_todolist.ui.components.button.ButtonAfterLogin
 import com.example.appcenter_todolist.ui.theme.BlackTextColor
 import com.example.appcenter_todolist.ui.theme.BucketItemContainer
@@ -37,7 +37,7 @@ import com.example.appcenter_todolist.viewmodel.BucketViewModel
 fun BucketItem(
     bucketResponse: BucketResponse,
     bucketViewModel: BucketViewModel,
-    appNavigationActionsAfterLogin: AppNavigationActionsAfterLogin,
+    appNavigationActions: AppNavigationActions,
     isMine: Boolean = true,
     onClickDetailButton : () -> Unit
 ) {

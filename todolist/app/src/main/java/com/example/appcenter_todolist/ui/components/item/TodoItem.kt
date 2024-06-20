@@ -12,7 +12,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
@@ -33,7 +32,6 @@ import com.example.appcenter_todolist.ui.theme.BlackIconColor
 import com.example.appcenter_todolist.ui.theme.BlackTextColor
 import com.example.appcenter_todolist.ui.theme.CustomTypography
 import com.example.appcenter_todolist.ui.theme.Dimensions
-import com.example.appcenter_todolist.ui.theme.GrayButtonContainer
 import com.example.appcenter_todolist.ui.theme.GrayIconColor
 import com.example.appcenter_todolist.viewmodel.CommentViewModel
 import com.example.appcenter_todolist.viewmodel.TodoViewModel

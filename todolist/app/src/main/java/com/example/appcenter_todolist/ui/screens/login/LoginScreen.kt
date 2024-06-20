@@ -20,23 +20,18 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import com.example.appcenter_todolist.model.member.LoginMemberReq
-import com.example.appcenter_todolist.navigation.AppNavigationActionsAfterLogin
-import com.example.appcenter_todolist.navigation.AppNavigationActionsBeforeLogin
+import com.example.appcenter_todolist.navigation.AppNavigationActions
 import com.example.appcenter_todolist.network.TokenExpirationEvent
 import com.example.appcenter_todolist.ui.components.button.ButtonBeforeLogin
 import com.example.appcenter_todolist.ui.components.textfield.LoginTextField
 import com.example.appcenter_todolist.ui.components.toolbar.ToolBarBeforeLogin
-import com.example.appcenter_todolist.ui.theme.Background
-import com.example.appcenter_todolist.ui.theme.ButtonContainer
 import com.example.appcenter_todolist.ui.theme.Dimensions
 import com.example.appcenter_todolist.viewmodel.MemberViewModel
-import com.google.accompanist.systemuicontroller.rememberSystemUiController
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LoginScreen(
-    appNavigationActionsBeforeLogin: AppNavigationActionsBeforeLogin,
-    appNavigationActionsAfterLogin: AppNavigationActionsAfterLogin,
+    appNavigationActions: AppNavigationActions,
     memberViewModel: MemberViewModel,
 ) {
     val tokenExpired = TokenExpirationEvent.expired.observeAsState()
@@ -53,7 +48,7 @@ fun LoginScreen(
 
 
     ToolBarBeforeLogin(
-        appNavigationActionsBeforeLogin = appNavigationActionsBeforeLogin
+        appNavigationActions = appNavigationActions
     ) {
         Column(
             modifier = Modifier
@@ -104,7 +99,7 @@ fun LoginScreen(
     LaunchedEffect(loginSuccess){
         if (loginSuccess == true && loginState && tokenExpired.value == false) {
             memberViewModel.clearLogin()
-            appNavigationActionsAfterLogin.navigateToMyBuckets()
+            appNavigationActions.navigateToMyBuckets()
         }
     }
 }

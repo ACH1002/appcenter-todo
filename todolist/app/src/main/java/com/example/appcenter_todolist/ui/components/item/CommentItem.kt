@@ -3,7 +3,6 @@ package com.example.appcenter_todolist.ui.components.item
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
@@ -20,7 +19,6 @@ import com.example.appcenter_todolist.model.todo.TodoResponse
 import com.example.appcenter_todolist.ui.theme.BlackTextColor
 import com.example.appcenter_todolist.ui.theme.CustomTypography
 import com.example.appcenter_todolist.viewmodel.CommentViewModel
-import com.example.appcenter_todolist.viewmodel.MyInfoState
 
 @Composable
 fun CommentItem(

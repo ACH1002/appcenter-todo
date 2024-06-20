@@ -50,9 +50,9 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.example.appcenter_todolist.model.bucket.UpdateBucketRequest
-import com.example.appcenter_todolist.navigation.AppNavigationActionsAfterLogin
-import com.example.appcenter_todolist.ui.components.item.TodoItem
+import com.example.appcenter_todolist.navigation.AppNavigationActions
 import com.example.appcenter_todolist.ui.components.dialog.AddTodoDialog
+import com.example.appcenter_todolist.ui.components.item.TodoItem
 import com.example.appcenter_todolist.ui.theme.Background
 import com.example.appcenter_todolist.ui.theme.BlackTextColor
 import com.example.appcenter_todolist.ui.theme.BottomBackground
@@ -73,7 +73,7 @@ import es.dmoral.toasty.Toasty
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MyBucketDetailScreen(
-    appNavigationActionsAfterLogin: AppNavigationActionsAfterLogin,
+    appNavigationActions: AppNavigationActions,
     bucketViewModel: BucketViewModel,
     todoViewModel: TodoViewModel,
     commentViewModel: CommentViewModel,
@@ -131,7 +131,7 @@ fun MyBucketDetailScreen(
         if (!isBackButtonPressed) {
             isBackButtonPressed = true
             Log.d("isBack", "isBack")
-            appNavigationActionsAfterLogin.popBackStack()
+            appNavigationActions.popBackStack()
         }
     }
 
@@ -203,7 +203,7 @@ fun MyBucketDetailScreen(
                                 IconButton(onClick = {
                                     if (!isBackButtonPressed) {
                                         isBackButtonPressed = true
-                                        appNavigationActionsAfterLogin.popBackStack()
+                                        appNavigationActions.popBackStack()
                                     }
                                 }) {
                                     Icon(

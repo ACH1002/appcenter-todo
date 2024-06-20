@@ -59,7 +59,6 @@ import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import com.example.appcenter_todolist.R
 import com.example.appcenter_todolist.model.bucket.BucketResponse
-import com.example.appcenter_todolist.model.bucket.UpdateBucketRequest
 import com.example.appcenter_todolist.model.comment.AddCommentReq
 import com.example.appcenter_todolist.model.member.MemberResponse
 import com.example.appcenter_todolist.model.todo.TodoResponse
@@ -72,10 +71,8 @@ import com.example.appcenter_todolist.ui.theme.CustomTypography
 import com.example.appcenter_todolist.ui.theme.Dimensions
 import com.example.appcenter_todolist.ui.theme.GrayDividerColor
 import com.example.appcenter_todolist.ui.theme.GrayTextColor
-import com.example.appcenter_todolist.viewmodel.BucketState
 import com.example.appcenter_todolist.viewmodel.CommentListState
 import com.example.appcenter_todolist.viewmodel.CommentViewModel
-import com.example.appcenter_todolist.viewmodel.TodoState
 import com.example.appcenter_todolist.viewmodel.TodoViewModel
 import es.dmoral.toasty.Toasty
 import kotlinx.coroutines.launch

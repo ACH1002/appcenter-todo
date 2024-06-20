@@ -13,19 +13,16 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import com.example.appcenter_todolist.navigation.AppNavigationActionsBeforeLogin
+import com.example.appcenter_todolist.navigation.AppNavigationActions
 import com.example.appcenter_todolist.ui.theme.Background
 import com.example.appcenter_todolist.ui.theme.BlackTextColor
-import com.example.appcenter_todolist.ui.theme.ButtonContainer
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ToolBarBeforeLogin(
-    appNavigationActionsBeforeLogin: AppNavigationActionsBeforeLogin,
+    appNavigationActions: AppNavigationActions,
     content: @Composable (PaddingValues) -> Unit
 ) {
     val systemUiController = rememberSystemUiController()
@@ -41,7 +38,7 @@ fun ToolBarBeforeLogin(
             TopAppBar(
                 title = {},
                 navigationIcon = {
-                    IconButton(onClick = { appNavigationActionsBeforeLogin.popBackStack() }) {
+                    IconButton(onClick = { appNavigationActions.popBackStack() }) {
                         Icon(imageVector = Icons.Default.ArrowBackIosNew, contentDescription = null)
                     }
                 },

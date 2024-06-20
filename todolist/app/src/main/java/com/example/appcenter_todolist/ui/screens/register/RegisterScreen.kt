@@ -23,7 +23,7 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.appcenter_todolist.model.member.SignupMemberReq
-import com.example.appcenter_todolist.navigation.AppNavigationActionsBeforeLogin
+import com.example.appcenter_todolist.navigation.AppNavigationActions
 import com.example.appcenter_todolist.ui.components.button.ButtonBeforeLogin
 import com.example.appcenter_todolist.ui.components.textfield.LoginTextField
 import com.example.appcenter_todolist.ui.components.toolbar.ToolBarBeforeLogin
@@ -36,7 +36,7 @@ import es.dmoral.toasty.Toasty
 
 @Composable
 fun RegisterScreen(
-    appNavigationActionsBeforeLogin: AppNavigationActionsBeforeLogin,
+    appNavigationActions: AppNavigationActions,
     memberViewModel: MemberViewModel
 ) {
     val context = LocalContext.current
@@ -56,7 +56,7 @@ fun RegisterScreen(
     val signupSuccess by memberViewModel.signupSuccess.collectAsState()
 
     ToolBarBeforeLogin(
-        appNavigationActionsBeforeLogin = appNavigationActionsBeforeLogin
+        appNavigationActions = appNavigationActions
     ) {
         Column(
             modifier = Modifier
@@ -130,7 +130,7 @@ fun RegisterScreen(
                 signupNickname = TextFieldValue("")
                 signupPassword = TextFieldValue("")
                 Toasty.success(context, (signupSuccess as SignUpState.Success).message, Toast.LENGTH_SHORT).show()
-                appNavigationActionsBeforeLogin.navigateToRegisterSuccess()
+                appNavigationActions.navigateToRegisterSuccess()
             }
             is SignUpState.Error->{
                 memberViewModel.clearSignUp()

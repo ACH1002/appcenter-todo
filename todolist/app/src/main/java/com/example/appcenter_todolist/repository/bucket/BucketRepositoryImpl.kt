@@ -1,9 +1,9 @@
 package com.example.appcenter_todolist.repository.bucket
 
-import com.example.appcenter_todolist.model.error.CommonResponse
 import com.example.appcenter_todolist.model.bucket.AddBucketRequest
 import com.example.appcenter_todolist.model.bucket.BucketResponse
 import com.example.appcenter_todolist.model.bucket.UpdateBucketRequest
+import com.example.appcenter_todolist.model.error.CommonResponse
 import com.example.appcenter_todolist.network.APIService
 import retrofit2.Response
 

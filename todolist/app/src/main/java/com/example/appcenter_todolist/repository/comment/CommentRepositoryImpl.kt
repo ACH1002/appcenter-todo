@@ -2,8 +2,8 @@ package com.example.appcenter_todolist.repository.comment
 
 import com.example.appcenter_todolist.model.comment.AddCommentReq
 import com.example.appcenter_todolist.model.comment.CommentResponse
-import com.example.appcenter_todolist.model.error.CommonResponse
 import com.example.appcenter_todolist.model.comment.UpdateCommentReq
+import com.example.appcenter_todolist.model.error.CommonResponse
 import com.example.appcenter_todolist.network.APIService
 import retrofit2.Response
 

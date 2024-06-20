@@ -33,9 +33,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import com.example.appcenter_todolist.navigation.AppNavigationActionsAfterLogin
-import com.example.appcenter_todolist.ui.components.item.TodoItem
+import com.example.appcenter_todolist.navigation.AppNavigationActions
 import com.example.appcenter_todolist.ui.components.dialog.AddTodoDialog
+import com.example.appcenter_todolist.ui.components.item.TodoItem
 import com.example.appcenter_todolist.ui.theme.Background
 import com.example.appcenter_todolist.ui.theme.BlackTextColor
 import com.example.appcenter_todolist.ui.theme.BottomBackground
@@ -52,7 +52,7 @@ import com.google.accompanist.systemuicontroller.rememberSystemUiController
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun OurBucketDetailScreen(
-    appNavigationActionsAfterLogin: AppNavigationActionsAfterLogin,
+    appNavigationActions: AppNavigationActions,
     bucketViewModel: BucketViewModel,
     todoViewModel: TodoViewModel,
     commentViewModel: CommentViewModel,
@@ -97,7 +97,7 @@ fun OurBucketDetailScreen(
         if (!isBackButtonPressed) {
             isBackButtonPressed = true
             Log.d("isBack", "isBack")
-            appNavigationActionsAfterLogin.popBackStack()
+            appNavigationActions.popBackStack()
         }
     }
 
@@ -138,7 +138,7 @@ fun OurBucketDetailScreen(
                                 IconButton(onClick = {
                                     if (!isBackButtonPressed) {
                                         isBackButtonPressed = true
-                                        appNavigationActionsAfterLogin.popBackStack()
+                                        appNavigationActions.popBackStack()
                                     }
                                 }
                                 ) {

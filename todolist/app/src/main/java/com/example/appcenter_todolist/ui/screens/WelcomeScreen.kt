@@ -16,7 +16,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.example.appcenter_todolist.navigation.AppNavigationActionsBeforeLogin
+import com.example.appcenter_todolist.navigation.AppNavigationActions
 import com.example.appcenter_todolist.ui.theme.Background
 import com.example.appcenter_todolist.ui.theme.ButtonContainer
 import com.example.appcenter_todolist.ui.theme.ButtonContent
@@ -26,7 +26,7 @@ import com.google.accompanist.systemuicontroller.rememberSystemUiController
 
 @Composable
 fun WelcomeScreen(
-    appNavigationActionsBeforeLogin: AppNavigationActionsBeforeLogin
+    appNavigationActions: AppNavigationActions
 ) {
 
     val systemUiController = rememberSystemUiController()
@@ -44,7 +44,7 @@ fun WelcomeScreen(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Button(
-            onClick = { appNavigationActionsBeforeLogin.navigateToRegister() },
+            onClick = { appNavigationActions.navigateToRegister() },
             colors = ButtonDefaults.buttonColors(
                 containerColor = ButtonContainer,
                 contentColor = ButtonContent
@@ -61,7 +61,7 @@ fun WelcomeScreen(
         }
         Spacer(modifier = Modifier.height(17.dp))
         Button(
-            onClick = { appNavigationActionsBeforeLogin.navigateToLogin() },
+            onClick = { appNavigationActions.navigateToLogin() },
             colors = ButtonDefaults.buttonColors(
                 containerColor = ButtonContainer,
                 contentColor = ButtonContent

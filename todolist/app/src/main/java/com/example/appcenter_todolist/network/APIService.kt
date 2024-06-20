@@ -1,18 +1,18 @@
 package com.example.appcenter_todolist.network
 
-import com.example.appcenter_todolist.model.comment.AddCommentReq
-import com.example.appcenter_todolist.model.todo.AddTodoReq
-import com.example.appcenter_todolist.model.comment.CommentResponse
-import com.example.appcenter_todolist.model.error.CommonResponse
 import com.example.appcenter_todolist.model.bucket.AddBucketRequest
 import com.example.appcenter_todolist.model.bucket.BucketResponse
 import com.example.appcenter_todolist.model.bucket.UpdateBucketRequest
-import com.example.appcenter_todolist.model.member.SignupMemberReq
-import com.example.appcenter_todolist.model.todo.TodoResponse
+import com.example.appcenter_todolist.model.comment.AddCommentReq
+import com.example.appcenter_todolist.model.comment.CommentResponse
 import com.example.appcenter_todolist.model.comment.UpdateCommentReq
+import com.example.appcenter_todolist.model.error.CommonResponse
 import com.example.appcenter_todolist.model.member.LoginMemberReq
 import com.example.appcenter_todolist.model.member.MemberResponse
+import com.example.appcenter_todolist.model.member.SignupMemberReq
 import com.example.appcenter_todolist.model.member.UpdateMemberReq
+import com.example.appcenter_todolist.model.todo.AddTodoReq
+import com.example.appcenter_todolist.model.todo.TodoResponse
 import com.example.appcenter_todolist.model.todo.UpdateTodoReq
 import retrofit2.Response
 import retrofit2.http.Body

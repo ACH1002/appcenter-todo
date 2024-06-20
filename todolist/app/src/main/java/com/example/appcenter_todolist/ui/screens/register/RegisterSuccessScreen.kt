@@ -11,7 +11,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import com.example.appcenter_todolist.navigation.AppNavigationActionsBeforeLogin
+import com.example.appcenter_todolist.navigation.AppNavigationActions
 import com.example.appcenter_todolist.ui.components.button.ButtonBeforeLogin
 import com.example.appcenter_todolist.ui.components.toolbar.ToolBarBeforeLogin
 import com.example.appcenter_todolist.ui.theme.BlackTextColor
@@ -20,9 +20,9 @@ import com.example.appcenter_todolist.ui.theme.Dimensions
 
 @Composable
 fun RegisterSuccessScreen(
-    appNavigationActionsBeforeLogin: AppNavigationActionsBeforeLogin
+    appNavigationActions: AppNavigationActions
 ) {
-    ToolBarBeforeLogin(appNavigationActionsBeforeLogin = appNavigationActionsBeforeLogin) {
+    ToolBarBeforeLogin(appNavigationActions = appNavigationActions) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -53,7 +53,7 @@ fun RegisterSuccessScreen(
             ButtonBeforeLogin(
                 content = "로그인 바로가기",
                 onclick = {
-                    appNavigationActionsBeforeLogin.navigateToLogin()
+                    appNavigationActions.navigateToLogin()
                 }
             )
         }

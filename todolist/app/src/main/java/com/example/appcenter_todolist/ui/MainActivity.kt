@@ -5,12 +5,12 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.annotation.RequiresApi
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -18,17 +18,16 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.appcenter_todolist.navigation.AllDestination
-import com.example.appcenter_todolist.navigation.AppNavigationActionsAfterLogin
-import com.example.appcenter_todolist.navigation.AppNavigationActionsBeforeLogin
+import com.example.appcenter_todolist.navigation.AppNavigationActions
 import com.example.appcenter_todolist.network.TokenExpirationEvent
-import com.example.appcenter_todolist.ui.screens.login.LoginScreen
-import com.example.appcenter_todolist.ui.screens.register.RegisterScreen
 import com.example.appcenter_todolist.ui.screens.WelcomeScreen
+import com.example.appcenter_todolist.ui.screens.login.LoginScreen
 import com.example.appcenter_todolist.ui.screens.mybucket.MyBucketDetailScreen
 import com.example.appcenter_todolist.ui.screens.mybucket.MyBucketsScreen
 import com.example.appcenter_todolist.ui.screens.ourbucket.OurBucketDetailScreen
 import com.example.appcenter_todolist.ui.screens.ourbucket.OurBucketsScreen
 import com.example.appcenter_todolist.ui.screens.ourbucket.OurMemberDetailBucketList
+import com.example.appcenter_todolist.ui.screens.register.RegisterScreen
 import com.example.appcenter_todolist.ui.screens.register.RegisterSuccessScreen
 import com.example.appcenter_todolist.ui.theme.Appcenter_todolistTheme
 import com.example.appcenter_todolist.viewmodel.AuthViewModel
@@ -53,10 +52,9 @@ class MainActivity : ComponentActivity() {
                     systemUiController.isNavigationBarVisible = false
 
                     val navController = rememberNavController()
-                    val appNavigationActionsBeforeLogin =
-                        remember(navController) { AppNavigationActionsBeforeLogin(navController) }
-                    val appNavigationActionsAfterLogin =
-                        remember(navController) { AppNavigationActionsAfterLogin(navController) }
+
+                    val appNavigationActions =
+                        remember(navController) { AppNavigationActions(navController) }
                     val authViewModel: AuthViewModel = koinViewModel()
                     val memberViewModel: MemberViewModel = koinViewModel()
                     val loginState by memberViewModel.loginState.collectAsState()
@@ -78,85 +76,74 @@ class MainActivity : ComponentActivity() {
                     LaunchedEffect(tokenExpired.value) {
                         if (tokenExpired.value == true) {
                             memberViewModel.checkTokenValidity()
-                            navController.navigate(AllDestination.WELCOME) {
-                                popUpTo(navController.graph.startDestinationId) {
-                                    inclusive = true
-                                }
-                            }
+                            appNavigationActions.navigateToWelcome()
                         }
                     }
 
-                    if (loginState && tokenExpired.value == false) {
-                        NavHost(
-                            navController = navController,
-                            startDestination = AllDestination.MYBUCKETS
-                        ) {
-                            composable(AllDestination.MYBUCKETS) {
-                                MyBucketsScreen(
-                                    appNavigationActionsAfterLogin = appNavigationActionsAfterLogin,
-                                    bucketViewModel = bucketViewModel,
-                                    memberViewModel = memberViewModel
-                                )
-                            }
-                            composable(AllDestination.MYDETAILBUCKET) {
-                                MyBucketDetailScreen(
-                                    appNavigationActionsAfterLogin = appNavigationActionsAfterLogin,
-                                    bucketViewModel = bucketViewModel,
-                                    todoViewModel = todoViewModel,
-                                    commentViewModel = commentViewModel,
-                                    memberViewModel = memberViewModel,
-                                )
-                            }
-                            composable(AllDestination.OURBUCKETS) {
-                                OurBucketsScreen(
-                                    appNavigationActionsAfterLogin = appNavigationActionsAfterLogin,
-                                    memberViewModel = memberViewModel,
-                                    bucketViewModel = bucketViewModel
-                                )
-                            }
-                            composable(AllDestination.OURDETAILBUCKETS) {
-                                OurBucketDetailScreen(
-                                    appNavigationActionsAfterLogin = appNavigationActionsAfterLogin,
-                                    bucketViewModel = bucketViewModel,
-                                    todoViewModel = todoViewModel,
-                                    commentViewModel = commentViewModel,
-                                    memberViewModel = memberViewModel
-                                )
-                            }
-                            composable(AllDestination.OURMEMBERDETAILBUCKETS) {
-                                OurMemberDetailBucketList(
-                                    appNavigationActionsAfterLogin = appNavigationActionsAfterLogin,
-                                    bucketViewModel = bucketViewModel,
-                                    memberViewModel = memberViewModel
-                                )
-                            }
+                    NavHost(
+                        navController = navController,
+                        startDestination = if (loginState && tokenExpired.value == false) AllDestination.MYBUCKETS else AllDestination.WELCOME
+                    ){
+
+                        composable(AllDestination.WELCOME) {
+                            WelcomeScreen(appNavigationActions)
                         }
-                    } else {
-                        NavHost(
-                            navController = navController,
-                            startDestination = AllDestination.WELCOME
-                        ) {
-                            composable(AllDestination.WELCOME) {
-                                WelcomeScreen(appNavigationActionsBeforeLogin)
-                            }
-                            composable(AllDestination.LOGIN) {
-                                LoginScreen(
-                                    appNavigationActionsBeforeLogin,
-                                    appNavigationActionsAfterLogin,
-                                    memberViewModel = memberViewModel
-                                )
-                            }
-                            composable(AllDestination.REGISTER) {
-                                RegisterScreen(
-                                    appNavigationActionsBeforeLogin,
-                                    memberViewModel = memberViewModel
-                                )
-                            }
-                            composable(AllDestination.REGISTERSUCCESS) {
-                                RegisterSuccessScreen(
-                                    appNavigationActionsBeforeLogin
-                                )
-                            }
+                        composable(AllDestination.LOGIN) {
+                            LoginScreen(
+                                appNavigationActions = appNavigationActions,
+                                memberViewModel = memberViewModel
+                            )
+                        }
+                        composable(AllDestination.REGISTER) {
+                            RegisterScreen(
+                                appNavigationActions,
+                                memberViewModel = memberViewModel
+                            )
+                        }
+                        composable(AllDestination.REGISTERSUCCESS) {
+                            RegisterSuccessScreen(
+                                appNavigationActions
+                            )
+                        }
+
+                        composable(AllDestination.MYBUCKETS) {
+                            MyBucketsScreen(
+                                appNavigationActions = appNavigationActions,
+                                bucketViewModel = bucketViewModel,
+                                memberViewModel = memberViewModel
+                            )
+                        }
+                        composable(AllDestination.MYDETAILBUCKET) {
+                            MyBucketDetailScreen(
+                                appNavigationActions = appNavigationActions,
+                                bucketViewModel = bucketViewModel,
+                                todoViewModel = todoViewModel,
+                                commentViewModel = commentViewModel,
+                                memberViewModel = memberViewModel,
+                            )
+                        }
+                        composable(AllDestination.OURBUCKETS) {
+                            OurBucketsScreen(
+                                appNavigationActions = appNavigationActions,
+                                memberViewModel = memberViewModel,
+                                bucketViewModel = bucketViewModel
+                            )
+                        }
+                        composable(AllDestination.OURDETAILBUCKETS) {
+                            OurBucketDetailScreen(
+                                appNavigationActions = appNavigationActions,
+                                bucketViewModel = bucketViewModel,
+                                todoViewModel = todoViewModel,
+                                commentViewModel = commentViewModel,
+                                memberViewModel = memberViewModel
+                            )
+                        }
+                        composable(AllDestination.OURMEMBERDETAILBUCKETS) {
+                            OurMemberDetailBucketList(
+                                appNavigationActions = appNavigationActions,
+                                bucketViewModel = bucketViewModel,
+                                memberViewModel = memberViewModel
+                            )
                         }
                     }
                 }

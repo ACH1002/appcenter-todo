@@ -1,7 +1,6 @@
 package com.example.appcenter_todolist.model.todo
 
 import com.google.gson.annotations.SerializedName
-import java.time.LocalDate
 import java.time.LocalDateTime
 
 data class TodoResponse (

@@ -5,9 +5,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.CircularProgressIndicator
@@ -18,19 +16,12 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.text.SpanStyle
-import androidx.compose.ui.text.buildAnnotatedString
-import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
-import com.example.appcenter_todolist.navigation.AppNavigationActionsAfterLogin
+import com.example.appcenter_todolist.navigation.AppNavigationActions
 import com.example.appcenter_todolist.ui.components.item.BucketItem
 import com.example.appcenter_todolist.ui.components.toolbar.ToolBarOurBuckets
-import com.example.appcenter_todolist.ui.theme.BlackTextColor
 import com.example.appcenter_todolist.ui.theme.ButtonContainer
-import com.example.appcenter_todolist.ui.theme.CustomTypography
 import com.example.appcenter_todolist.viewmodel.BucketListState
 import com.example.appcenter_todolist.viewmodel.BucketViewModel
 import com.example.appcenter_todolist.viewmodel.MemberViewModel
@@ -41,7 +32,7 @@ import es.dmoral.toasty.Toasty
 
 @Composable
 fun OurMemberDetailBucketList(
-    appNavigationActionsAfterLogin: AppNavigationActionsAfterLogin,
+    appNavigationActions: AppNavigationActions,
     memberViewModel: MemberViewModel,
     bucketViewModel: BucketViewModel
 ){
@@ -91,7 +82,7 @@ fun OurMemberDetailBucketList(
     }
 
     ToolBarOurBuckets(
-        appNavigationActionsAfterLogin = appNavigationActionsAfterLogin,
+        appNavigationActions = appNavigationActions,
         bucketViewModel = bucketViewModel,
         memberViewModel = memberViewModel,
         isBack = true
@@ -119,11 +110,11 @@ fun OurMemberDetailBucketList(
                             BucketItem(
                                 bucketResponse = bucket,
                                 bucketViewModel = bucketViewModel,
-                                appNavigationActionsAfterLogin = appNavigationActionsAfterLogin,
+                                appNavigationActions = appNavigationActions,
                                 isMine = (myInfo as MyInfoState.Success).myInfo.id == bucket.memberId,
                                 onClickDetailButton = {
                                     bucketViewModel.setSelectedAnyoneBucketState(bucket = bucket)
-                                    appNavigationActionsAfterLogin.navigateToOurDetailBuckets()
+                                    appNavigationActions.navigateToOurDetailBuckets()
                                 }
                             )
                         }
